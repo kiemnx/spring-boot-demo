@@ -1,12 +1,26 @@
 package vn.plusplus.springboot.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import vn.plusplus.springboot.config.DBConnection;
 import vn.plusplus.springboot.controller.request.RegisterReq;
 import vn.plusplus.springboot.controller.request.UpdateReq;
+import vn.plusplus.springboot.interfaces.UserService;
+import vn.plusplus.springboot.interfaces.UserServiceImpl;
+import vn.plusplus.springboot.utils.Account;
+import vn.plusplus.springboot.utils.Student;
 
 @RestController
 @RequestMapping(value = "/api")
 public class HomeController {
+
+    /*private final UserService userService;
+
+    public HomeController(UserService userService) {
+        this.userService = userService;
+    }*/
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/request-mapping/{name}", method = RequestMethod.GET)
     public Object getExampleMethod(@PathVariable(value = "name") String name){
@@ -21,17 +35,26 @@ public class HomeController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Object register(@RequestBody RegisterReq req){
-        System.out.println(req.getUsername());
+        System.out.println(req.getPhone());
         System.out.println(req.getEmail());
         //Tim kiem trong DB xem da ton tai username
         //Neu chua thi insert 1 ban ghi user voi thong tin da dang ky
         //Neu co roi thi bao lai co loi: Username da dang ky
-
-        return "Dang ky thanh cong";
+        boolean check = userService.insertUser(req.getPhone(), req.getEmail(), req.getPassword());
+        if(!check){
+            return "Dang ky thanh cong";
+        } else {
+            return "Phone da dang ky";
+        }
     }
 
     @PostMapping(value = "/login")
     public String login(@RequestBody RegisterReq req){
+
+        Account account = new Student();
+        account.setUsername("");
+
+
         /* Kiem tra username co ton tai hay khong,
         Neu ton tai thi kiem tra password, neu khong ton tai thi bao loi chua dang ky
         Neu password dung thi bao thanh cong, neu password sai thi bao loi thong tin khong hop le
