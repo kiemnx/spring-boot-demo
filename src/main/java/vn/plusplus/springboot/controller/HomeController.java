@@ -2,11 +2,10 @@ package vn.plusplus.springboot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import vn.plusplus.springboot.config.DBConnection;
 import vn.plusplus.springboot.controller.request.RegisterReq;
 import vn.plusplus.springboot.controller.request.UpdateReq;
 import vn.plusplus.springboot.interfaces.UserService;
-import vn.plusplus.springboot.interfaces.UserServiceImpl;
+import vn.plusplus.springboot.services.RadioService;
 import vn.plusplus.springboot.utils.Account;
 import vn.plusplus.springboot.utils.Student;
 
@@ -21,6 +20,14 @@ public class HomeController {
     }*/
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RadioService radioService;
+
+    @GetMapping(value = "/get-radio")
+    public Object getRadioData(){
+        return radioService.getAPIUsingRestTemplate();
+    }
 
     @RequestMapping(value = "/request-mapping/{name}", method = RequestMethod.GET)
     public Object getExampleMethod(@PathVariable(value = "name") String name){

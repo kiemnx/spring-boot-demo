@@ -11,10 +11,14 @@ import java.sql.Statement;
 @Service
 public class UserServiceImpl implements UserService{
 
-    Connection connection = null;
-    public UserServiceImpl() {
-        this.connection = DBConnection.getConnection();
+    private final DBConnection dbConnection;
+    private final Connection connection;
+
+    public UserServiceImpl(DBConnection dbConnection) {
+        this.dbConnection = dbConnection;
+        this.connection = dbConnection.getConnection();
     }
+
 
     @Override
     public boolean checkUserExistedByPhone(String phone) {

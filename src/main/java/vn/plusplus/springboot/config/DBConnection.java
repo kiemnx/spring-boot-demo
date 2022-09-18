@@ -1,15 +1,26 @@
 package vn.plusplus.springboot.config;
 
-import vn.plusplus.springboot.controller.HomeController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+@Configuration
 public class DBConnection {
 
-    private static Connection connection = null;
+    private  Connection connection = null;
 
-    public static Connection getConnection(){
+    @Value("${database.url}")
+    private String dbUrl;
+
+    @Value("${database.username}")
+    private String username;
+
+    @Value("${database.password}")
+    private String password;
+
+    public  Connection getConnection(){
 //        HomeController home = new HomeController();
         if(connection == null){
             connection = connectMySql();
@@ -18,10 +29,10 @@ public class DBConnection {
     }
 
 
-    private static Connection connectMySql() {
+    private  Connection connectMySql() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/user_info","root","1234");
+            connection = DriverManager.getConnection(dbUrl,username,password);
             System.out.println("Connected MSYQL");
             return connection;
         } catch (Exception e) {
