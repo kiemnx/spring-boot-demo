@@ -26,4 +26,14 @@ public class RadioService {
         return data;
     }
 
+    public static void main(String[] args) {
+        String path = "uploads/claim/2021101V01002DI0000004/ANOTHER_VEHICLE_THIRD_PARTY_DRIVING.png";
+        int index = path.lastIndexOf("/");
+        String pathString = path.substring(0, index);
+        String fileName = "ABC".concat(path.substring(index + 1));
+        String a = pathString.concat("/").concat(fileName);
+        System.out.println(a);
+    }
+
+
 }

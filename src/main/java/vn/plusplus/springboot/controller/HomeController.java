@@ -1,7 +1,11 @@
 package vn.plusplus.springboot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import vn.plusplus.springboot.controller.request.Person;
+import vn.plusplus.springboot.controller.request.PersonForm;
 import vn.plusplus.springboot.controller.request.RegisterReq;
 import vn.plusplus.springboot.controller.request.UpdateReq;
 import vn.plusplus.springboot.interfaces.UserService;
@@ -9,84 +13,56 @@ import vn.plusplus.springboot.services.RadioService;
 import vn.plusplus.springboot.utils.Account;
 import vn.plusplus.springboot.utils.Student;
 
-@RestController
-@RequestMapping(value = "/api")
+import java.util.ArrayList;
+import java.util.List;
+
+@Controller
 public class HomeController {
 
-    /*private final UserService userService;
-
-    public HomeController(UserService userService) {
-        this.userService = userService;
-    }*/
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private RadioService radioService;
-
-    @GetMapping(value = "/get-radio")
-    public Object getRadioData(){
-        return radioService.getAPIUsingRestTemplate();
+    private static List<Person> persons = new ArrayList<>();
+    static {
+        persons.add(new Person(1, "Bill", "Gates", "M"));
+        persons.add(new Person(2, "Steve", "Jobs", "M"));
     }
 
-    @RequestMapping(value = "/request-mapping/{name}", method = RequestMethod.GET)
-    public Object getExampleMethod(@PathVariable(value = "name") String name){
-        String response = "Xin chao: " + name;
-        return response;
+    int currentId = 2;
+
+    //    @GetMapping(value = {"/", "/index"})
+    public String index(Model model){
+        model.addAttribute("message", "Xin chao cac ban");
+        return "index";
     }
 
-    @GetMapping(value = "/get-mapping")
-    public Object getExampleMethod2(){
-        return "Any object 2";
+    @GetMapping(value = "/personList")
+    public String personPage(Model model){
+        //Truy van database lay lis person
+        /*List<Book>
+        * List<User>
+          List<FavouriteBook>*/
+        model.addAttribute("persons", persons);
+        return "personList";
+    }
+    @GetMapping(value = "/addPerson")
+    public String showAddPersonPage(Model model){
+        PersonForm personForm = new PersonForm();
+        model.addAttribute("personForm", personForm);
+        return "addPerson";
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public Object register(@RequestBody RegisterReq req){
-        System.out.println(req.getPhone());
-        System.out.println(req.getEmail());
-        //Tim kiem trong DB xem da ton tai username
-        //Neu chua thi insert 1 ban ghi user voi thong tin da dang ky
-        //Neu co roi thi bao lai co loi: Username da dang ky
-        boolean check = userService.insertUser(req.getPhone(), req.getEmail(), req.getPassword());
-        if(!check){
-            return "Dang ky thanh cong";
-        } else {
-            return "Phone da dang ky";
-        }
+    @PostMapping(value = "/addPerson")
+    public String savePerson(Model model,
+                             @ModelAttribute("personForm") PersonForm request){
+        String firstName = request.getFirstName();
+        String lastName = request.getLastName();
+        String gender = request.getGender();
+        currentId ++;
+        persons.add(new Person(currentId, firstName, lastName, gender));
+        return "redirect:/personList";
     }
 
-    @PostMapping(value = "/login")
-    public String login(@RequestBody RegisterReq req){
-
-        Account account = new Student();
-        account.setUsername("");
-
-
-        /* Kiem tra username co ton tai hay khong,
-        Neu ton tai thi kiem tra password, neu khong ton tai thi bao loi chua dang ky
-        Neu password dung thi bao thanh cong, neu password sai thi bao loi thong tin khong hop le
-        * */
-        if("1234".equals(req.getPassword())){
-            return "Dang nhap thanh cong";
-        } else {
-            return "Thong tin khong hop le";
-        }
+    @GetMapping(value = "/person")
+    public String getPersonDetail(@RequestParam("id") Integer id){
+        Person person = persons.get(id);
+        return "index";
     }
-
-
-    @PutMapping(value = "/updateEmail")
-    public String updateEmail(@RequestBody UpdateReq req){
-        /*Tim ban ghi co username trong request
-        Cap nhat email cua ban ghi theo email trong request
-        * */
-
-        return "Thanh cong";
-    }
-
-    @DeleteMapping(value = "/remove")
-    public String removeUserByUsername(@RequestParam(name = "username") String username){
-        System.out.println("Removing user: " + username);
-        return "Thanh cong";
-    }
-
 }
