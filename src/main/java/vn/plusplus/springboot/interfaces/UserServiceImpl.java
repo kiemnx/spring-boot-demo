@@ -2,6 +2,7 @@ package vn.plusplus.springboot.interfaces;
 
 import org.springframework.stereotype.Service;
 import vn.plusplus.springboot.config.DBConnection;
+import vn.plusplus.springboot.utils.Account;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -28,6 +29,8 @@ public class UserServiceImpl implements UserService{
             System.out.println("QUERY: " + query);
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()){
+                Account account = new Account();
+                account.setUsername(resultSet.getString("username"));
                 return true;
             }
 
