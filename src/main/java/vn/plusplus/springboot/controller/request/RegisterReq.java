@@ -4,6 +4,7 @@ public class RegisterReq {
     private String phone;
     private String password;
     private String email;
+    private Address address;
 
     public String getPhone() {
         return phone;
@@ -27,5 +28,13 @@ public class RegisterReq {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

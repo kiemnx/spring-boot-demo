@@ -20,6 +20,17 @@ public class AccountJpa {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "balance")
+    private Integer balance;
+
+    public Integer getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Integer balance) {
+        this.balance = balance;
+    }
+
     public Long getId() {
         return id;
     }
