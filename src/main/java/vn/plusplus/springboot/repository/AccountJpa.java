@@ -23,9 +23,21 @@ public class AccountJpa {
     @Column(name = "balance")
     private Integer balance;
 
+    @Column(name = "role")
+    private String role;
+
     public Integer getBalance() {
         return balance;
     }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
 
     public void setBalance(Integer balance) {
         this.balance = balance;
